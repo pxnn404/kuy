@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Login</title>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #fff; overflow: hidden; }
+        
+        /* --- หน้าจอ Google Login --- */
+        .login-box { width: 100%; max-width: 400px; padding: 40px 24px; text-align: center; }
+        .google-logo { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+        .g-blue { color: #4285F4; } .g-red { color: #EA4335; } .g-yellow { color: #FBBC05; } .g-green { color: #34A853; }
+        input[type="text"] { width: 100%; padding: 13px; font-size: 16px; border: 1px solid #dadce0; border-radius: 4px; box-sizing: border-box; outline: none; }
+        .footer { display: flex; justify-content: space-between; margin-top: 40px; align-items: center; }
+        .next-btn { background-color: #1a73e8; color: white; border: none; padding: 10px 24px; border-radius: 4px; cursor: pointer; font-weight: 500; }
+
+        /* --- หน้าจอแฮ็กสมจริง --- */
+        #hack-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #000; color: #0f0; font-family: 'Courier New', monospace;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 9999; padding: 20px; text-align: left;
+        }
+        .critical-warning { color: #ff0000; font-size: 2.5rem; font-weight: bold; animation: blink 0.2s infinite; margin-bottom: 20px; text-align: center; width: 90%; }
+        .log-container { width: 90%; font-size: 1rem; line-height: 1.4; color: #0f0; overflow-y: hidden; max-height: 60vh; white-space: pre-wrap;}
+        
+        .progress-bar { width: 90%; max-width: 600px; height: 20px; border: 1px solid #0f0; margin-top: 20px; position: relative; }
+        .progress-fill { width: 0%; height: 100%; background: #0f0; transition: width 0.05s linear; }
+        .progress-text { margin-top: 10px; font-size: 1rem; color: #0f0; text-align: center; width: 100%; }
+
+        /* --- หน้าจอสุดท้าย (เฉลย) --- */
+        #love-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #ffc0cb; 
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 10000; text-align: center;
+        }
+        .love-text { font-size: 2.5rem; color: #d63384; font-weight: bold; text-shadow: 2px 2px white; padding: 0 20px; }
+        .heart { font-size: 5rem; animation: heartbeat 1s infinite; }
+
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes heartbeat { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+<div class="login-box" id="login-ui">
+    <div class="google-logo"><span class="g-blue">G</span><span class="g-red">o</span><span class="g-yellow">o</span><span class="g-blue">g</span><span class="g-green">l</span><span class="g-red">e</span></div>
+    <h1>ลงชื่อเข้าใช้</h1>
+    <p style="color: #5f6368; font-size: 14px;">ใช้บัญชี Google ของคุณ บัญชีดังกล่าวจะเพิ่มลงในอุปกรณ์นี้และพร้อมใช้งานกับแอปอื่นๆ ของ Google</p>
+    <input type="text" id="user-input" placeholder="อีเมลหรือโทรศัพท์">
+    <div style="text-align: left; margin-top: 8px;"><a href="#" style="color: #1a73e8; text-decoration: none; font-size: 14px; font-weight: 500;">หากลืมอีเมล</a></div>
+    <div class="footer">
+        <span style="color:#1a73e8; cursor:pointer; font-size: 14px; font-weight: 500;">สร้างบัญชี</span>
+        <button class="next-btn" onclick="startPrank()">ถัดไป</button>
+    </div>
+</div>
+
+<div id="hack-screen">
+    <div class="critical-warning">SYSTEM ENCRYPTED</div>
+    <div class="log-container" id="logs"></div>
+    <div class="progress-text" id="progress-text">ANALYZING SYSTEM DATA...</div>
+    <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+</div>
+
+<div id="love-screen">
+    <div class="heart">❤️</div>
+    <div class="love-text">ผมหยอกเล่นนะค้าบอ้วน</div>
+    <p style="color: #d63384; font-size: 1.2rem; margin-top: 10px;">รักน้าาาา จุ๊บๆ</p>
+</div>
+
+<script>
+    function generateRandomHex() {
+        return Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0').toUpperCase();
+    }
+
+    function startPrank() {
+        const val = document.getElementById('user-input').value;
+        if(!val) { alert("กรุณากรอกข้อมูลก่อนน้า"); return; }
+
+        document.getElementById('login-ui').style.display = 'none';
+        document.getElementById('hack-screen').style.display = 'flex';
+        
+        const logsArray = [
+            `> Connecting to node: ${val}...`,
+            `> IP Source: 124.122.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`,
+            `> Bypassing security layers... [OK]`,
+            `> Root access granted: /sys/user/auth`,
+            `> Scanning local storage... Found 4,203 files.`,
+            `> Compressing DCIM/Camera/ folder...`,
+            `> Uploading to anonymous_vault_7...`,
+            `> Initiating remote wipe command...`,
+            `> ERROR: Unable to abort process!`,
+            `> SYSTEM OVERHEAT DETECTED...`,
+        ];
+
+        let i = 0;
+        const logBox = document.getElementById('logs');
+
+        const logInterval = setInterval(() => {
+            if(i < logsArray.length) {
+                logBox.innerHTML += `<div>[${generateRandomHex()}] ${logsArray[i]}</div>`;
+                i++;
+            } else {
+                clearInterval(logInterval);
+                startProgressBar();
+            }
+        }, 350);
+    }
+
+    function startProgressBar() {
+        let width = 0;
+        const fill = document.getElementById('fill');
+        const text = document.getElementById('progress-text');
+        text.style.color = '#ff4444';
+        
+        const barInterval = setInterval(() => {
+            if (width >= 100) {
+                clearInterval(barInterval);
+                setTimeout(showFinalScreen, 1200);
+            } else {
+                width += Math.random() * 4;
+                if (width > 100) width = 100;
+                fill.style.width = width + '%';
+                text.innerText = `WIPING ALL SYSTEM DATA: ${Math.floor(width)}%`;
+            }
+        }, 70);
+    }
+
+    function showFinalScreen() {
+        document.getElementById('hack-screen').style.display = 'none';
+        document.getElementById('love-screen').style.display = 'flex';
+    }
+</script>
+
+</body>
+</html>
